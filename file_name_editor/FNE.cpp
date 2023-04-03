@@ -1,0 +1,25 @@
+#include <iostream>
+#include <filesystem>
+#include <string>
+
+using namespace std;
+namespace fs = std::filesystem;
+
+int main()
+{
+    string path = "/mnt/f/New folder (2)"; // current directory
+    for (const auto &entry : fs::directory_iterator(path))
+    {
+        if (entry.is_regular_file())
+        { // only process regular files
+            string old_name = entry.path().filename().string();
+            if (old_name.length() > 6)
+            {                                                                    // only process files with at least 5 characters
+                string new_name = old_name.substr(6);                            // erase first 5 characters
+                fs::rename(entry.path(), entry.path().parent_path() / new_name); // rename file
+                cout << "Renamed file from " << old_name << " to " << new_name << endl;
+            }
+        }
+    }
+    return 0;
+}
