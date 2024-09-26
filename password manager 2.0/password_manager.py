@@ -6,11 +6,11 @@ import os
 
 
 FIELDS = ["Name", "Password"]
-DB = "temp/db.csv"
-
+DB = "db.csv"
+KEY = "key.db"
 
 def load_key() -> Fernet:
-    with open("temp/key.db", mode="a+") as file:
+    with open(KEY, mode="a+") as file:
         file.seek(0)
         key: str = file.readline()
         if file.tell() == 0:
