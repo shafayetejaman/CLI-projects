@@ -1,5 +1,4 @@
 # CLI Projects
-# CLI Projects Repository
 
 This repository contains a collection of command-line interface (CLI) projects written in **C**, **C++**, and **Python**. Each project is a simple demonstration of various programming concepts and problem-solving techniques.
 
