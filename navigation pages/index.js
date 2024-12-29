@@ -23,7 +23,7 @@ console.log(pathParts[pathParts.length - 1])
 
 // episode-012";
 if (!document.querySelector(`#episode-${pathParts[pathParts.length - 1]}`)) // Check if the element exists
-{
+{b
     prompt("Not found!");
     return;
 }
