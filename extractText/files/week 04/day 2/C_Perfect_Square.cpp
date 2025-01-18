@@ -1,0 +1,93 @@
+// https://codeforces.com/problemset/problem/1881/C
+
+#pragma GCC optimize("Ofast")
+#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,avx2,fma")
+#pragma GCC optimize("unroll-loops")
+#include <bits/stdc++.h>
+
+using namespace std;
+
+typedef pair<int, int> pii;
+typedef vector<int> vi;
+typedef vector<char> vc;
+typedef vector<vector<char>> vvc;
+typedef vector<long long> vll;
+typedef vector<vi> vvi;
+typedef vector<bool> vb;
+typedef vector<vb> vvb;
+typedef vector<pii> vp;
+typedef vector<string> vs;
+typedef long double ld;
+typedef long long ll;
+#define ln '\n'
+#define loop(n) for(auto j = 0; j < n; j++)
+#define fast_cin() ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL)
+#define all(x) (x).begin(), (x).end()
+#define div(n, k) (n % k == 0)
+#define even(n) (n % 2 == 0)
+#define endl cout << '\n'
+
+// const int N = 1e5 + 1;
+
+void solve()
+{
+    int n, count = 0;
+    cin >> n;
+
+    vvc v(n, vc(n));
+
+    for (auto& i : v)
+    {
+        for (auto& j : i)
+        {
+            cin >> j;
+        }
+    }
+
+    while (true)
+    {
+        int befor = count;
+        int c1 = 0, c2 = 0, r1 = n - 1, r2 = 0;
+
+        while (c1 < n and r2 < n)
+        {
+            c2 = 0;
+            r1 = n - 1;
+
+            while (c2 < n and r1 >= 0)
+            {
+                if (v[r1][c1] != v[r2][c2])
+                {
+                    count += abs(v[r1][c1] - v[r2][c2]);
+
+                    if (v[r1][c1] > v[r2][c2])
+                    {
+                        v[r2][c2] = v[r1][c1];
+                    }
+                    else
+                    {
+                        v[r1][c1] = v[r2][c2];
+                    }
+                }
+                c2++;
+                r1--;
+            }
+            c1++;
+            r2++;
+        }
+        if (count == befor) break;
+    }
+    cout << count << ln;
+
+}
+
+int main()
+{
+    fast_cin();
+    int t = 1;
+    cin >> t;
+
+    loop(t) solve();
+
+    return 0;
+}
