@@ -37,13 +37,13 @@ def move_file(src):
     dist = path.join(DIST_DIR, path.basename(src))
     try:
         run(["move", src, dist], shell=True, check=True)
-    except CalledProcessError as e:
+    except Exception as e:
         print("Error: ", e)
 
     print(f"Moved {src} -> {dist}")
 
 
-with ThreadPoolExecutor(max_workers=8) as executor:
+with ThreadPoolExecutor(max_workers=2) as executor:
     executor.map(move_file, allFiles)
 
 
