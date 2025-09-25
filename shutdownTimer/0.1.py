@@ -6,7 +6,7 @@ from enum import Enum
 
 
 class Keys(str, Enum):
-    bootTime = "bootTime"
+    bootDate = "bootDate"
     upTime = "upTime"
     lastShutdown = "lastShutdown"
 
@@ -15,31 +15,32 @@ DB_NAME = "C:\\Users\\Shafayet\\shutdownTimer\\DB.json"
 
 while True:
     currentTime = datetime.now()
-    timestamp = currentTime.timestamp()
     currentDate = currentTime.date().strftime("%d/%m")
 
     with open(DB_NAME, "r+") as file:
         try:
             data = json.load(file)
         except:
-            data = {Keys.bootTime: timestamp}
+            data = {}
+
+        # reset counters
+        if data.get(Keys.bootDate) != currentDate:
+            data = {Keys.bootDate: currentDate, Keys.upTime: 0}
 
         # if already shutdown for the day
         if data.get(Keys.lastShutdown) == currentDate:
             os.system("shutdown /s /t 1")
 
-        # update uptime
-        data[Keys.upTime] = timestamp
+        # add 2 minutes uptime
+        data[Keys.upTime] = data.get(Keys.upTime, 0) + 120
 
         # rewrite file
         file.seek(0)
         json.dump(data, file, indent=4)
         file.truncate()
 
-        # calculate difference
-        diff = data.get(Keys.upTime, 0) - data.get(Keys.bootTime, 0)
-
-        if diff >= (3 * 60 * 60) - 10:  # 3 hours
+        # check if uptime >= 3 hours
+        if data.get(Keys.upTime, 0) >= (3 * 60 * 60) - 10:
             print(os.system("shutdown /s /t 10"))
             file.seek(0)
             file.truncate()
