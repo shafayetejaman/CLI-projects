@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-import os
+import subprocess
 import time
 from enum import Enum
 
@@ -11,7 +11,9 @@ class Keys(str, Enum):
     lastShutdown = "lastShutdown"
 
 
-DB_NAME = "C:\\Users\\Shafayet\\shutdownTimer\\DB.json"
+DB_NAME = "/mnt/HDD/Downloads/Documents/workspace/CLI-projects/shutdownTimer/DB.json"
+TOTAL_TIME = (3 * 60 * 60) - 10
+
 
 while True:
     currentTime = datetime.now()
@@ -29,7 +31,8 @@ while True:
 
         # if already shutdown for the day
         if data.get(Keys.lastShutdown) == currentDate:
-            os.system("shutdown /s /t 1")
+            subprocess.run(["shutdown", "-h", "now"])
+            break
 
         # add 2 minutes uptime
         data[Keys.upTime] = data.get(Keys.upTime, 0) + 120
@@ -39,9 +42,9 @@ while True:
         json.dump(data, file, indent=4)
         file.truncate()
 
-        # check if uptime >= 3 hours
-        if data.get(Keys.upTime, 0) >= (3 * 60 * 60) - 10:
-            print(os.system("shutdown /s /t 10"))
+        # check if uptime >= total time
+        if data.get(Keys.upTime, 0) >= TOTAL_TIME:
+            subprocess.run(["shutdown", "-h", "now"])
             file.seek(0)
             file.truncate()
             data = {Keys.lastShutdown: currentDate}
