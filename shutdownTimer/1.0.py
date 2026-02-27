@@ -12,27 +12,35 @@ class Keys(str, Enum):
 
 
 DB_NAME = "/mnt/HDD/Downloads/Documents/workspace/CLI-projects/shutdownTimer/DB.json"
-TOTAL_TIME = (3 * 60 * 60) - 10
+TOTAL_TIME = (3 * 60 * 60) - (3 * 60) - 10
 
+
+def sleep(minutes: int = 2):
+    time.sleep(60 * minutes)
+
+
+def shutdown(minutes: int = 1):
+    subprocess.run(f"notify-send '   Shutting down in {minutes} min'", shell=True)
+    subprocess.run(f"shutdown -h {minutes}", shell=True)
+
+
+sleep()
 
 while True:
     currentTime = datetime.now()
     currentDate = currentTime.date().strftime("%d/%m")
 
     with open(DB_NAME, "r+") as file:
-        try:
-            data = json.load(file)
-        except:
-            data = {}
+        data = json.load(file)
+
+        # if already shutdown for the day
+        if data.get(Keys.lastShutdown) == currentDate:
+            shutdown()
+            break
 
         # reset counters
         if data.get(Keys.bootDate) != currentDate:
             data = {Keys.bootDate: currentDate, Keys.upTime: 0}
-
-        # if already shutdown for the day
-        if data.get(Keys.lastShutdown) == currentDate:
-            subprocess.run(["shutdown", "-h", "now"])
-            break
 
         # add 2 minutes uptime
         data[Keys.upTime] = data.get(Keys.upTime, 0) + 120
@@ -44,11 +52,11 @@ while True:
 
         # check if uptime >= total time
         if data.get(Keys.upTime, 0) >= TOTAL_TIME:
-            subprocess.run(["shutdown", "-h", "now"])
+            shutdown()
             file.seek(0)
             file.truncate()
             data = {Keys.lastShutdown: currentDate}
             json.dump(data, file)
             break
 
-    time.sleep(60 * 2)  # wait 2 minutes
+        sleep()
