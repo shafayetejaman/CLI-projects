@@ -20,10 +20,11 @@ def sleep(minutes: int = 2):
 
 
 def shutdown(minutes: int = 1):
-    subprocess.run(f"notify-send '   Shutting down in {minutes} min'", shell=True)
-    subprocess.run(f"shutdown -h {minutes}", shell=True)
+    subprocess.run(["notify-send", f"   Shutting down in {minutes} min"])
+    subprocess.run(["shutdown", "-h", str(minutes)])
 
 
+print("started")
 sleep()
 
 while True:
@@ -31,7 +32,11 @@ while True:
     currentDate = currentTime.date().strftime("%d/%m")
 
     with open(DB_NAME, "r+") as file:
-        data = json.load(file)
+        try:
+            data = json.load(file)
+        except Exception as e:
+            print(e)
+            data = {}
 
         # if already shutdown for the day
         if data.get(Keys.lastShutdown) == currentDate:
