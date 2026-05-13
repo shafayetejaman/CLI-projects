@@ -24,8 +24,24 @@ def shutdown(minutes: int = 1):
     subprocess.run(["shutdown", "-h", str(minutes)])
 
 
-print("started")
+print("Timer started")
+subprocess.run(["notify-send", "   Shutdown Timer started"])
+
 sleep()
+
+#
+# # shutdown if it earlyer then 11:00
+# def check_morning():
+#     currentTime = datetime.now()
+#     currentDate = currentTime.time()
+#     hour = currentDate.hour
+#     if hour <= 11:
+#         shutdown()
+#         exit(-1)
+#
+#
+# check_morning()
+#
 
 while True:
     currentTime = datetime.now()
