@@ -20,12 +20,14 @@ def sleep(minutes: int = 2):
 
 
 def shutdown(minutes: int = 1):
-    subprocess.run(["notify-send", f"   Shutting down in {minutes} min"])
+    subprocess.run(
+        ["notify-send", "-t", "10000", f"   Shutting down in {minutes} min"]
+    )
     subprocess.run(["shutdown", "-h", str(minutes)])
 
 
 print("Timer started")
-subprocess.run(["notify-send", "   Shutdown Timer started"])
+subprocess.run(["notify-send", "-t", "20000", "   Shutdown Timer started"])
 
 sleep()
 
