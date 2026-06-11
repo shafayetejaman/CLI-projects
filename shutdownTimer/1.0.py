@@ -20,16 +20,24 @@ def sleep(minutes: int = 2):
 
 
 def shutdown(minutes: int = 1):
-    subprocess.run(
-        ["notify-send", "-t", "10000", f"   Shutting down in {minutes} min"]
-    )
+    subprocess.run(["notify-send", "-t", "10000", f"Shutting down in {minutes} min"])
     subprocess.run(["shutdown", "-h", str(minutes)])
 
 
-print("Timer started")
-subprocess.run(["notify-send", "-t", "20000", "   Shutdown Timer started"])
+print("Shutdown Timer started")
+subprocess.run(["notify-send", "-t", "20000", "Shutdown Timer started"])
 
-sleep()
+
+def check_Drive():
+    sleep()
+
+    result = subprocess.run(["mount", "-a"])
+    print(result.returncode)
+
+    if result.returncode != 0:
+        subprocess.run(["notify-send", "-u", "critical", "❌   Drive not found\\!"])
+        shutdown()
+
 
 #
 # # shutdown if it earlyer then 11:00
@@ -44,6 +52,9 @@ sleep()
 #
 # check_morning()
 #
+
+check_Drive()
+
 
 while True:
     currentTime = datetime.now()
